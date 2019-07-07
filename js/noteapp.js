@@ -1,23 +1,23 @@
 window.onload  = () =>{
-    const cards= document.getElementsByClassName('cards')
-    cards[0].setAttribute('class','cards load');
+    const cards= document.getElementsByClassName('notes')
+    cards[0].setAttribute('class','notes load');
 
     if (storageAvailable('localStorage')) {
-        document.querySelector('.add-card').addEventListener('click',()=>{
+        document.querySelector('.add-note').addEventListener('click',()=>{
                 const notesContent = localStorage.getItem('notes'),newNotes = {};
                 let  notes = [];
                 newNotes.createdOn = Date.now();
                 newNotes.text = ' ';
-                if (notesContent !== null) {
+                if (notesContent !== null && notesContent !=='') {
                     notes = JSON.parse(notesContent);
                 } 
                 notes.push(newNotes);
                 localStorage.setItem('notes',JSON.stringify(notes));
                 const   newCard = document.createElement('div');
-                        newCard.setAttribute('class','card card-'+newNotes.createdOn);
-                const cards = document.querySelector('.cards')
+                        newCard.setAttribute('class','note note-'+newNotes.createdOn);
+                const cards = document.querySelector('.notes')
                               cards.insertBefore(newCard,cards.childNodes[0]);
-                const   getCard = document.getElementsByClassName('card');
+                const   getCard = document.getElementsByClassName('note');
                         getCard[0].innerHTML = cardContent(newNotes);
                         document.getElementsByClassName('note-area')[0].contentEditable = true;
                 ///now scroll back up
@@ -26,21 +26,21 @@ window.onload  = () =>{
         });
 
     notes = JSON.parse(localStorage.getItem('notes'));
-    if( notes !== null ) {
+    if( notes !== null && notes !=='') {
         notes.reverse();
         let i = 0;
         notes.forEach(note => {
             const cards = document.createElement('div');
-                cards.setAttribute('class','card card-'+note.createdOn);
-                document.querySelector('.cards').appendChild(cards);
-            const card = document.getElementsByClassName('card');
+                cards.setAttribute('class','note note-'+note.createdOn);
+                document.querySelector('.notes').appendChild(cards);
+            const card = document.getElementsByClassName('note');
             card[i].innerHTML = cardContent(note);
             document.getElementsByClassName('note-area')[i].contentEditable = true;
             i++;
         });
     }
 
-    }
+  }
     
 }
 
@@ -77,9 +77,9 @@ window.onload  = () =>{
 
   cardContent = (note) => {
      const dateTime = new Date(note.createdOn);
-     let content = '<div class="card-header"><div class="header-content">'+ dateTime.toDateString() +'</div>';
+     let content = '<div class="note-header"><div class="header-content">'+ dateTime.toDateString() +'</div>';
          content         +='<div class="header-content"><i class="fa fa-edit icon-'+note.createdOn+'"></i><i class="fa fa-trash" onclick="deleteNote('+note.createdOn+')"></i>';
-         content          +='</div></div> <div class="card-body"> <div class="note-area"  onblur="updateCard(this)" id="'+note.createdOn+'">'+note.text+'</div></div>';
+         content          +='</div></div> <div class="note-body"> <div class="note-area"  onblur="updateCard(this)" id="'+note.createdOn+'">'+note.text+'</div></div>';
 
            return content;
  }
@@ -87,27 +87,27 @@ window.onload  = () =>{
 
  updateCard = (div) => {
      const text = div.innerHTML;
-     let id='';
-     const getNotes = JSON.parse(localStorage.getItem('notes')).reverse();
+    //  let id='';
+     const getNotes = JSON.parse(localStorage.getItem('notes'));
      const updatedNotes = [];
 
      getNotes.forEach(note =>{
          if (note.createdOn == div.id) {
              note.text = text;
-             id=note.createdOn;
+            //  id=note.createdOn;
              updatedNotes.push(note);
          } else {
             updatedNotes.push(note);
          }
          
      });
-     localStorage.setItem('notes',JSON.stringify(updatedNotes.reverse()));
-     const icon =document.querySelector('.icon-'+id);
+     localStorage.setItem('notes',JSON.stringify(updatedNotes));
+     const icon =document.querySelector('.icon-'+div.id);
      setTimeout(()=>{
-        icon.setAttribute('class','fa fa-edit icon-'+id);
+        icon.setAttribute('class','fa fa-edit icon-'+div.id);
         icon.style.color = '#000';
      },3000);
-        icon.setAttribute('class','fa fa-check icon-'+id);
+        icon.setAttribute('class','fa fa-check icon-'+div.id);
         icon.style.color = '#00C851';
      
     
@@ -116,7 +116,7 @@ window.onload  = () =>{
 
 
   deleteNote = (timestamp) => {
-    const getNotes = JSON.parse(localStorage.getItem('notes')).reverse();
+    const getNotes = JSON.parse(localStorage.getItem('notes'));
     notesArr = [];
     getNotes.forEach(note =>{
         if (note.createdOn !== timestamp) {
@@ -124,9 +124,9 @@ window.onload  = () =>{
         } 
     });
 
-    localStorage.setItem('notes',JSON.stringify(notesArr.reverse()));
+    localStorage.setItem('notes',JSON.stringify(notesArr));
 
-    let node = document.getElementsByClassName('card-'+timestamp);
+    let node = document.getElementsByClassName('note-'+timestamp);
     if (node[0].parentNode) {
         node[0].parentNode.removeChild(node[0]);
     }
