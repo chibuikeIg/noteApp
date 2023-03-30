@@ -1,6 +1,6 @@
-# Note App
+# Sticky Note Web App
 
-#### Simple browser based  note app 
+#### Simple browser based  sticky note app 
 
 ## FEATURES 
 
@@ -12,6 +12,3 @@
 ## Description 
 
 This app is a browser based app which allows users to input or note anything down on their browser as a reminder.
-
-
-[noteapp](https://u-notes.herokuapp.com)
